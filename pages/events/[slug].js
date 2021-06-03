@@ -18,8 +18,6 @@ export default function EventPage({ evt }) {
       })
       const data = await res.json()
 
-      console.log(res)
-
       if (!res.ok) {
         toast.error(data.message)
       } else {
