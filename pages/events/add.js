@@ -1,3 +1,4 @@
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react'
@@ -40,6 +41,10 @@ export default function AddEventPage() {
     })
 
     if (!res.ok && !hasEmptyFields) {
+      if (res.status === 403 || res.status === 401) {
+        toast.error('No token included')
+        return
+      }
       toast.error('Something Went Wrong')
     } else {
       const evt = await res.json()
@@ -142,4 +147,8 @@ export default function AddEventPage() {
       </form>
     </Layout>
   )
+}
+
+export async function getServerSideProps({ req }) {
+
 }
