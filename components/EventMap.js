@@ -16,7 +16,6 @@ export default function EventMap({ evt }) {
   })
 
   useEffect(() => {
-
     fetch(`https://api.geoapify.com/v1/geocode/search?text=${evt.address}&apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}`)
       .then(response => response.json())
       .then(result => {
@@ -27,7 +26,7 @@ export default function EventMap({ evt }) {
         setViewport({ ...viewport, latitude: lat, longitude: lon });
         setLoading(false)
       })
-      .catch(error => console.log('eor', error));
+      .catch(error => console.log('error', error));
 
   }, [])
 
