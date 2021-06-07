@@ -19,7 +19,6 @@ export default function EventMap({ evt }) {
     fetch(`https://api.geoapify.com/v1/geocode/search?text=${evt.address}&apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}`)
       .then(response => response.json())
       .then(result => {
-        console.log(result)
         const { lat, lon } = result.features[0].properties;
         setLat(lat);
         setLng(lon);
@@ -31,8 +30,6 @@ export default function EventMap({ evt }) {
   }, [])
 
   if (loading) return false
-
-  console.log(lat, lng)
 
   return (
     <ReactMapGl {...viewport} mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN} onViewportChange={(vp) => setViewport(vp)}>
