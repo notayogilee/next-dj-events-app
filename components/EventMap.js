@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import ReactMapGl, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { NEXT_URL } from 'config/index'
 
 export default function EventMap({ evt }) {
   const [lat, setLat] = useState(null)
@@ -16,23 +17,38 @@ export default function EventMap({ evt }) {
   })
 
   useEffect(() => {
-    fetch(`https://api.geoapify.com/v1/geocode/search?text=${evt.address}&apiKey=${process.env.GEOAPIFY_API_KEY}`)
-      .then(response => response.json())
-      .then(result => {
-        const { lat, lon } = result.features[0].properties;
-        setLat(lat);
-        setLng(lon);
-        setViewport({ ...viewport, latitude: lat, longitude: lon });
-        setLoading(false)
-      })
-      .catch(error => console.log('error', error));
+    getGeocode(evt.address)
 
   }, [])
+
+  const getGeocode = async (address) => {
+    try {
+      const res = await fetch(`${NEXT_URL}/api/map`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          address: address
+        })
+      })
+
+      const response = await res.json()
+
+      await setLat(response[1])
+      await setLng(response[0])
+
+      setViewport({ ...viewport, latitude: response[1], longitude: response[0] })
+      setLoading(false)
+    } catch (error) {
+      console.log('ERROR', error)
+    }
+  }
 
   if (loading) return false
 
   return (
-    <ReactMapGl {...viewport} mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN} onViewportChange={(vp) => setViewport(vp)}>
+    <ReactMapGl {...viewport} mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN} onViewportChange={(vp) => setViewport(vp)}>
       <Marker key={evt.id} latitude={lat} longitude={lng}>
         <Image src='/images/pin.svg' width={30} height={30} />
       </Marker>
