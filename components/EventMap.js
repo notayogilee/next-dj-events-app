@@ -16,7 +16,7 @@ export default function EventMap({ evt }) {
   })
 
   useEffect(() => {
-    fetch(`https://api.geoapify.com/v1/geocode/search?text=${evt.address}&apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY}`)
+    fetch(`https://api.geoapify.com/v1/geocode/search?text=${evt.address}&apiKey=${process.env.GEOAPIFY_API_KEY}`)
       .then(response => response.json())
       .then(result => {
         const { lat, lon } = result.features[0].properties;
@@ -32,12 +32,12 @@ export default function EventMap({ evt }) {
   if (loading) return false
 
   return (
-    <ReactMapGl {...viewport} mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN} onViewportChange={(vp) => setViewport(vp)}>
+    <ReactMapGl {...viewport} mapboxApiAccessToken={process.env.MAPBOX_API_TOKEN} onViewportChange={(vp) => setViewport(vp)}>
       <Marker key={evt.id} latitude={lat} longitude={lng}>
         <Image src='/images/pin.svg' width={30} height={30} />
       </Marker>
     </ReactMapGl>
-
-
   )
 }
+
+
